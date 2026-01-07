@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leadership Dashboard</title>
+<script src="my-portal/storage.js"></script>
+<style>
+body{font-family:'Segoe UI',Arial,sans-serif;margin:0;background:#f0f4f8;}
+header{background:#1E40AF;color:white;padding:15px 40px;display:flex;justify-content:space-between;align-items:center;}
+.profile-container{display:flex;align-items:center;gap:15px;}
+.logout-btn{padding:8px 16px;background:#EF4444;border:none;border-radius:6px;color:white;font-weight:bold;cursor:pointer;}
+.container{max-width:1200px;margin:40px auto;padding:0 20px;}
+h2{color:#1E40AF;}
+table{width:100%;border-collapse:collapse;margin-top:20px;}
+th,td{border:1px solid #ccc;padding:8px;text-align:center;}
+th{background:#1E40AF;color:white;}
+.pip{color:red;font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<h1>Leadership Dashboard</h1>
+<div class="profile-container">
+    <div id="profileName"></div>
+    <button class="logout-btn" id="logoutBtn">Logout</button>
+</div>
+</header>
+<div class="container">
+<h2>Team Reports</h2>
+<table>
+<thead>
+<tr><th>Associate</th><th>Total Errors</th><th>PIP</th><th>Call Date</th><th>QC Date</th><th>Interaction ID</th></tr>
+</thead>
+<tbody id="tableBody"></tbody>
+</table>
+</div>
+<script>
+const user = JSON.parse(localStorage.getItem('loggedInUser'));
+if(!user || user.role!=='leadership'){ window.location.href="my-portal/auth.html"; }
+document.getElementById('profileName').textContent = user.username;
+document.getElementById('logoutBtn').addEventListener('click',()=>{ localStorage.removeItem('loggedInUser'); window.location.href="my-portal/auth.html"; });
+
+function render(){
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML='';
+    const reports = Storage.getReportsByLeader(user.username);
+    reports.forEach(r=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML=`<td>${r.username}</td><td>${r.totalErrors}</td><td class="pip">${r.pip}</td><td>${r.callDate}</td><td>${r.qcDate}</td><td>${r.interactionID}</td>`;
+        tbody.appendChild(tr);
+    });
+}
+render();
+</script>
+</body>
+</html>
