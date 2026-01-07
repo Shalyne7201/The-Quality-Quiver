@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Redirecting...</title>
+<style>
+body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background-color: #f0f4f8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+.redirect-msg {
+    font-size: 1.5em;
+    color: #1E40AF;
+}
+</style>
+</head>
+<body>
+<p class="redirect-msg">Checking your role and redirecting...</p>
+
+<script>
+const loggedInUser = JSON.parse(localStorage.getItem('loggedInUser'));
+
+if(!loggedInUser){
+    window.location.href = "my-portal/auth.html";
+} else {
+    if(loggedInUser.role === 'leadership'){
+        window.location.href = "my-portal/leadership-welcome.html";
+    } else if(loggedInUser.role === 'associate'){
+        window.location.href = "my-portal/associate-welcome.html";
+    } else {
+        alert("Unknown role detected. Redirecting to login.");
+        localStorage.removeItem('loggedInUser');
+        window.location.href = "my-portal/auth.html";
+    }
+}
+</script>
+</body>
+</html>
